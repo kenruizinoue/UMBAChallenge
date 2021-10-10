@@ -5,11 +5,12 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
-import com.kenruizinoue.umbachallenge.main.MainContract
 import com.kenruizinoue.umbachallenge.model.Movie
 import com.kenruizinoue.umbachallenge.model.MovieRepository
 import com.kenruizinoue.umbachallenge.model.local.MovieDatabase
+import com.kenruizinoue.umbachallenge.model.network.ServiceBuilder
 import com.kenruizinoue.umbachallenge.presenter.MainPresenter
+import com.kenruizinoue.umbachallenge.util.Constants.TYPE_POPULAR
 
 class MainActivity : AppCompatActivity(), MainContract.View {
 
@@ -22,9 +23,12 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         setContentView(R.layout.activity_main)
         textView = findViewById(R.id.textView)
         // todo inject db with Hilt
-        repository = MovieRepository(Room.databaseBuilder(this, MovieDatabase::class.java, "db").build().getMovieDao())
+        repository = MovieRepository(
+            movieDao = Room.databaseBuilder(this, MovieDatabase::class.java, "db").build().getMovieDao(),
+            apiService = ServiceBuilder.create()
+        )
         presenter = MainPresenter(lifecycleScope, this, repository)
-        presenter.onFetchStart("latest")
+        presenter.onFetchStart(TYPE_POPULAR)
     }
 
     override fun displayData(movies: List<Movie>) {
