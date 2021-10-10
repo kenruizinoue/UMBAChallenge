@@ -1,10 +1,12 @@
-package com.kenruizinoue.umbachallenge
+package com.kenruizinoue.umbachallenge.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
+import com.kenruizinoue.umbachallenge.MainContract
+import com.kenruizinoue.umbachallenge.R
 import com.kenruizinoue.umbachallenge.model.Movie
 import com.kenruizinoue.umbachallenge.model.MovieRepository
 import com.kenruizinoue.umbachallenge.model.local.MovieDatabase
@@ -14,14 +16,15 @@ import com.kenruizinoue.umbachallenge.util.Constants.TYPE_POPULAR
 
 class MainActivity : AppCompatActivity(), MainContract.View {
 
-    private lateinit var textView: TextView
     private lateinit var presenter: MainPresenter
     private lateinit var repository: MovieRepository
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var movieAdapter: MovieAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        textView = findViewById(R.id.textView)
+        recyclerView = findViewById(R.id.recyclerView)
         // todo inject db with Hilt
         repository = MovieRepository(
             movieDao = Room.databaseBuilder(this, MovieDatabase::class.java, "db").build().getMovieDao(),
@@ -29,10 +32,13 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         )
         presenter = MainPresenter(lifecycleScope, this, repository)
         presenter.onFetchStart(TYPE_POPULAR)
+
+        movieAdapter = MovieAdapter(arrayListOf())
+        recyclerView.apply { adapter = movieAdapter }
     }
 
     override fun displayData(movies: List<Movie>) {
-        textView.text = movies.size.toString()
+        movieAdapter.updateData(movies)
     }
 
     override fun displayMovie(movie: Movie) {
