@@ -17,7 +17,11 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import javax.inject.Named
 
 object MainModule {
 
@@ -26,6 +30,22 @@ object MainModule {
     abstract class MainContractModule {
         @Binds
         abstract fun bindView(activity: MainActivity): MainContract.View
+    }
+
+    @Module
+    @InstallIn(SingletonComponent::class)
+    object DispatchModule {
+        @Provides
+        @Named("io")
+        fun provideIoDispatcher(): CoroutineDispatcher {
+            return Dispatchers.IO
+        }
+
+        @Provides
+        @Named("main")
+        fun provideMainDispatcher(): CoroutineDispatcher {
+            return Dispatchers.Main
+        }
     }
 
     @Module
