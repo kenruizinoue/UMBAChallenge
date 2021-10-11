@@ -46,8 +46,6 @@ class DetailActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun verifyReleaseDateText(releaseDate: String?): String {
-        if (releaseDate.isNullOrEmpty()) return "Without Release Date"
-        return releaseDate
-    }
+    private fun verifyReleaseDateText(releaseDate: String?) =
+        if (releaseDate.isNullOrEmpty()) "Without Release Date" else releaseDate
 }

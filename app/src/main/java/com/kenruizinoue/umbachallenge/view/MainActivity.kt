@@ -39,10 +39,6 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         movieAdapter.updateData(movies)
     }
 
-    override fun displayMovie(movie: Movie) {
-        TODO("Not yet implemented")
-    }
-
     override fun showToast(message: String) {
         TODO("Not yet implemented")
     }

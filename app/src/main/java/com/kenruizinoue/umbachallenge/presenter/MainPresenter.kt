@@ -27,7 +27,7 @@ class MainPresenter
                 }
                 movies.isEmpty() && type == TYPE_LATEST -> {
                     // DB empty & latest option selected
-                    fetchRemoteMovie(type)
+                    fetchRemoteLatestMovie()
                 }
                 movies.isNotEmpty() && type != TYPE_LATEST  -> {
                     // DB not empty
@@ -37,17 +37,15 @@ class MainPresenter
                 }
                 movies.size == 1 && type == TYPE_LATEST -> {
                     // DB not empty & latest option selected
-                    mainView.displayMovie(movies[0])
+                    withContext(Dispatchers.Main) {
+                        mainView.displayData(movies)
+                    }
                 }
                 else -> {
                     // todo handle exception
                 }
             }
         }
-    }
-
-    override fun onFetchLatestMovie(useRemoteSource: Boolean) {
-        // todo implement
     }
 
     override fun onRefreshData(type: String) {
@@ -71,8 +69,23 @@ class MainPresenter
         }
     }
 
-    private fun fetchRemoteMovie(type: String) {
-        // todo implement
+    private suspend fun fetchRemoteLatestMovie() {
+        val response = movieRepository.getRemoteLatestMovie()
+        if (response.isSuccessful) {
+            movieRepository.deleteLocalMovies(TYPE_LATEST)
+            response.body()?.let {
+                it.type = TYPE_LATEST
+                movieRepository.insertLocalMovies(listOf(it))
+            }
+            withContext(Dispatchers.Main) {
+                response.body()?.let {
+                    mainView.displayData(listOf(it))
+                }
+            }
+        } else {
+            // todo handle exception
+            throw IOException(response.message())
+        }
     }
 
 }

@@ -25,7 +25,7 @@ class MovieRepository (private val movieDao: MovieDao, private val apiService: A
         return apiService.getMovies(type, BuildConfig.API_KEY)
     }
 
-    suspend fun getRemoteMovie(): Response<Movie> {
-        return apiService.getMovie(BuildConfig.API_KEY)
+    suspend fun getRemoteLatestMovie(): Response<Movie> {
+        return apiService.getLatestMovie(BuildConfig.API_KEY)
     }
 }
