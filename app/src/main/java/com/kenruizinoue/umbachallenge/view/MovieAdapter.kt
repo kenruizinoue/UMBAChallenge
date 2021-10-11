@@ -24,7 +24,7 @@ class MovieAdapter (private var movies: ArrayList<Movie>): RecyclerView.Adapter<
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateData(newData: List<Movie>) {
-        movies = newData as ArrayList<Movie>
+        movies = ArrayList(newData)
         notifyDataSetChanged()
     }
 

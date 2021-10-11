@@ -11,5 +11,5 @@ interface ApiService {
     suspend fun getMovies(@Path("type") type: String, @Query("api_key") key: String): Response<Movies>
 
     @GET("/3/movie/latest")
-    suspend fun getMovie(@Query("api_key") key: String): Response<Movie>
+    suspend fun getLatestMovie(@Query("api_key") key: String): Response<Movie>
 }
