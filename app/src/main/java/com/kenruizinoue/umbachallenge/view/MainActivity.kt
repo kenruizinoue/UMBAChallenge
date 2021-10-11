@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         bottomNavigationView = findViewById(R.id.bottomNavigationView)
         recyclerView.apply { adapter = movieAdapter }
         setupBottomNavListener()
-        presenter.onFetchStart(TYPE_POPULAR)
+        presenter.onLoadData(TYPE_POPULAR)
     }
 
     override fun displayData(movies: List<Movie>) {
@@ -59,16 +59,16 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.action_popular -> {
-                    presenter.onFetchStart(TYPE_POPULAR)
+                    presenter.onLoadData(TYPE_POPULAR)
                 }
                 R.id.action_upcoming -> {
-                    presenter.onFetchStart(TYPE_UPCOMING)
+                    presenter.onLoadData(TYPE_UPCOMING)
                 }
                 R.id.action_top_rated -> {
-                    presenter.onFetchStart(TYPE_TOP_RATED)
+                    presenter.onLoadData(TYPE_TOP_RATED)
                 }
                 R.id.action_latest -> {
-                    presenter.onFetchStart(TYPE_LATEST)
+                    presenter.onLoadData(TYPE_LATEST)
                 }
                 else -> {
                     // todo handle exception
