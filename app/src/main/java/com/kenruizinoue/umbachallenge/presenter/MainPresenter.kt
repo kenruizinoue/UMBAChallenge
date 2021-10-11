@@ -1,8 +1,10 @@
 package com.kenruizinoue.umbachallenge.presenter
 
 import com.kenruizinoue.umbachallenge.contract.MainContract
+import com.kenruizinoue.umbachallenge.model.Movie
 import com.kenruizinoue.umbachallenge.model.MovieRepository
 import com.kenruizinoue.umbachallenge.util.Constants.TYPE_LATEST
+import com.kenruizinoue.umbachallenge.util.TimestampUtils.getMinutesDifference
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,23 +22,32 @@ class MainPresenter
     override fun onLoadData(type: String) {
         scope.launch(Dispatchers.IO) {
             val movies = movieRepository.getLocalMovies(type)
+
             when {
                 movies.isEmpty() && type != TYPE_LATEST -> {
-                    // DB empty
+                    // DB empty, fetch remote data
                     fetchRemoteData(type)
                 }
                 movies.isEmpty() && type == TYPE_LATEST -> {
-                    // DB empty & latest option selected
+                    // DB empty & latest option selected, fetch remote latest movie
                     fetchRemoteLatestMovie()
                 }
-                movies.isNotEmpty() && type != TYPE_LATEST  -> {
-                    // DB not empty
+                movies.isNotEmpty() && type != TYPE_LATEST && isDataOld(movies[0]) -> {
+                    // DB not empty & data is old, fetch remote data
+                    fetchRemoteData(type)
+                }
+                movies.size == 1 && type == TYPE_LATEST && isDataOld(movies[0]) -> {
+                    // DB not empty & latest option selected & data is old, fetch remote latest movie
+                    fetchRemoteLatestMovie()
+                }
+                movies.isNotEmpty() && type != TYPE_LATEST && !isDataOld(movies[0]) -> {
+                    // DB not empty & data is not old, show current data
                     withContext(Dispatchers.Main) {
                         mainView.displayData(movies)
                     }
                 }
-                movies.size == 1 && type == TYPE_LATEST -> {
-                    // DB not empty & latest option selected
+                movies.size == 1 && type == TYPE_LATEST && !isDataOld(movies[0]) -> {
+                    // DB not empty & latest option selected & data is not old, show current data
                     withContext(Dispatchers.Main) {
                         mainView.displayData(movies)
                     }
@@ -57,7 +68,10 @@ class MainPresenter
         if (response.isSuccessful) {
             movieRepository.deleteLocalMovies(type)
             response.body()?.let {
-                it.results.map { movie -> movie.type = type }
+                it.results.map { movie ->
+                    movie.type = type
+                    movie.inserted_time = System.currentTimeMillis()
+                }
                 movieRepository.insertLocalMovies(it.results)
             }
             withContext(Dispatchers.Main) {
@@ -75,6 +89,7 @@ class MainPresenter
             movieRepository.deleteLocalMovies(TYPE_LATEST)
             response.body()?.let {
                 it.type = TYPE_LATEST
+                it.inserted_time = System.currentTimeMillis()
                 movieRepository.insertLocalMovies(listOf(it))
             }
             withContext(Dispatchers.Main) {
@@ -88,4 +103,7 @@ class MainPresenter
         }
     }
 
+    // if the data has more than 10 minutes in the database, it's old
+    private fun isDataOld(movie: Movie): Boolean =
+        getMinutesDifference(movie.inserted_time, System.currentTimeMillis()) > 10
 }
