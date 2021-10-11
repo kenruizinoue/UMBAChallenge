@@ -6,12 +6,12 @@ class MainContract {
     interface View {
         fun displayData(movies: List<Movie>)
         fun showToast(message: String)
-        fun stopRefreshAnimation()
+        fun showRefreshAnimation()
         fun showSnackbar()
     }
 
     interface Presenter {
         fun onLoadData(type: String)
-        fun onRefreshData(type: String)
+        fun onRefreshData()
     }
 }
