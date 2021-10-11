@@ -12,7 +12,7 @@ interface MovieDao {
     suspend fun insertMovies(movies: List<Movie>)
 
     @Query("SELECT * FROM Movie WHERE type = :type")
-    fun getMoviesByType(type: String): Flow<List<Movie>>
+    fun getMoviesByType(type: String): List<Movie>
 
     @Query("DELETE FROM Movie WHERE type = :type")
     suspend fun deleteMoviesByType(type: String)
