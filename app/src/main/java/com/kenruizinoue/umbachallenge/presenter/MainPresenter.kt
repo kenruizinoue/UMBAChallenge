@@ -4,6 +4,7 @@ import com.kenruizinoue.umbachallenge.contract.MainContract
 import com.kenruizinoue.umbachallenge.model.Movie
 import com.kenruizinoue.umbachallenge.model.MovieRepository
 import com.kenruizinoue.umbachallenge.util.Constants.TYPE_LATEST
+import com.kenruizinoue.umbachallenge.util.Constants.TYPE_POPULAR
 import com.kenruizinoue.umbachallenge.util.TimestampUtils.getMinutesDifference
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +20,10 @@ class MainPresenter
     private val movieRepository: MovieRepository
 ) : MainContract.Presenter {
 
+    var selectedType: String = TYPE_POPULAR
+
     override fun onLoadData(type: String) {
+        selectedType = type
         scope.launch(Dispatchers.IO) {
             val movies = movieRepository.getLocalMovies(type)
 
@@ -59,8 +63,14 @@ class MainPresenter
         }
     }
 
-    override fun onRefreshData(type: String) {
-        // todo implement
+    override fun onRefreshData() {
+        scope.launch(Dispatchers.IO) {
+            if (selectedType != TYPE_LATEST) {
+                fetchRemoteData(selectedType)
+            } else {
+                fetchRemoteLatestMovie()
+            }
+        }
     }
 
     private suspend fun fetchRemoteData(type: String) {

@@ -12,6 +12,6 @@ class MainContract {
 
     interface Presenter {
         fun onLoadData(type: String)
-        fun onRefreshData(type: String)
+        fun onRefreshData()
     }
 }
