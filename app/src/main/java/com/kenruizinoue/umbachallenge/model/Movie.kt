@@ -15,5 +15,6 @@ data class Movie(
     val vote_average: String?,
     val overview: String?,
     val release_date: String?,
-    var type: String?
+    var type: String?,
+    var inserted_time: Long = 0
 ): Parcelable
