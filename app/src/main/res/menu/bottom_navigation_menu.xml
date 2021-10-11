@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Popular" android:id="@+id/action_popular" android:icon="@drawable/ic_group"/>
+    <item android:title="Upcoming" android:id="@+id/action_upcoming" android:icon="@drawable/ic_alarm"/>
+    <item android:title="Top Rated" android:id="@+id/action_top_rated" android:icon="@drawable/ic_thumb_up"/>
+    <item android:title="Latest" android:id="@+id/action_latest" android:icon="@drawable/ic_new"/>
+
+</menu>

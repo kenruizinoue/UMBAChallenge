@@ -5,8 +5,9 @@
       <map>
         <entry key="app/src/main/res/drawable/ic_calendar.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/mock_image.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.178125" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/item_movie.xml" value="0.1" />
+        <entry key="app/src/main/res/menu/bottom_navigation_menu.xml" value="0.1921875" />
       </map>
     </option>
   </component>
