@@ -58,7 +58,7 @@ class MainPresenter
                     withContext(Dispatchers.Main) { mainView.displayData(movies) }
                 }
                 else -> {
-                    // todo handle exception
+                    mainView.showSnackbar()
                 }
             }
         }
@@ -67,6 +67,7 @@ class MainPresenter
     override fun onRefreshData() {
         refrshingData = true
         scope.launch(Dispatchers.IO) {
+            withContext(Dispatchers.Main) { mainView.showRefreshAnimation() }
             if (selectedType != TYPE_LATEST) {
                 fetchRemoteData(selectedType)
             } else {
@@ -94,8 +95,7 @@ class MainPresenter
                 response.body()?.let { mainView.displayData(it.results) }
             }
         } else {
-            // todo handle exception
-            throw IOException(response.message())
+            mainView.showSnackbar()
         }
     }
 
@@ -118,8 +118,7 @@ class MainPresenter
                 }
             }
         } else {
-            // todo handle exception
-            throw IOException(response.message())
+            mainView.showSnackbar()
         }
     }
 
