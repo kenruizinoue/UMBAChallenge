@@ -13,7 +13,7 @@ class MovieRepository (private val movieDao: MovieDao, private val apiService: A
         return movieDao.insertMovies(movies)
     }
 
-    fun getLocalMovies(type: String): Flow<List<Movie>> {
+    fun getLocalMovies(type: String): List<Movie> {
         return movieDao.getMoviesByType(type)
     }
 

@@ -12,10 +12,8 @@ class MainContract {
     }
 
     interface Presenter {
-        fun onFetchStart(type: String)
+        fun onLoadData(type: String)
         fun onFetchLatestMovie(useRemoteSource: Boolean)
         fun onRefreshData(type: String)
-        fun attach(view: View)
-        fun onDestroy()
     }
 }
