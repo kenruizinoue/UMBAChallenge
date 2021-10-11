@@ -2,6 +2,7 @@ package com.kenruizinoue.umbachallenge.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -47,11 +48,11 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     override fun showToast(message: String) {
-        TODO("Not yet implemented")
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun stopRefreshAnimation() {
-        TODO("Not yet implemented")
+    override fun showRefreshAnimation() {
+        swipeRefreshLayout.isRefreshing = true
     }
 
     override fun showSnackbar() {

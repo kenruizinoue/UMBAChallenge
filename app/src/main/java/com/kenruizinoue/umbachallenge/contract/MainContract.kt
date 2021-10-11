@@ -6,7 +6,7 @@ class MainContract {
     interface View {
         fun displayData(movies: List<Movie>)
         fun showToast(message: String)
-        fun stopRefreshAnimation()
+        fun showRefreshAnimation()
         fun showSnackbar()
     }
 

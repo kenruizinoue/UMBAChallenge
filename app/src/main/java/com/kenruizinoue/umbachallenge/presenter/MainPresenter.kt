@@ -21,6 +21,7 @@ class MainPresenter
 ) : MainContract.Presenter {
 
     var selectedType: String = TYPE_POPULAR
+    var refrshingData: Boolean = false
 
     override fun onLoadData(type: String) {
         selectedType = type
@@ -30,31 +31,31 @@ class MainPresenter
             when {
                 movies.isEmpty() && type != TYPE_LATEST -> {
                     // DB empty, fetch remote data
+                    withContext(Dispatchers.Main) { mainView.showRefreshAnimation() }
                     fetchRemoteData(type)
                 }
                 movies.isEmpty() && type == TYPE_LATEST -> {
                     // DB empty & latest option selected, fetch remote latest movie
+                    withContext(Dispatchers.Main) { mainView.showRefreshAnimation() }
                     fetchRemoteLatestMovie()
                 }
                 movies.isNotEmpty() && type != TYPE_LATEST && isDataOld(movies[0]) -> {
                     // DB not empty & data is old, fetch remote data
+                    withContext(Dispatchers.Main) { mainView.showRefreshAnimation() }
                     fetchRemoteData(type)
                 }
                 movies.size == 1 && type == TYPE_LATEST && isDataOld(movies[0]) -> {
                     // DB not empty & latest option selected & data is old, fetch remote latest movie
+                    withContext(Dispatchers.Main) { mainView.showRefreshAnimation() }
                     fetchRemoteLatestMovie()
                 }
                 movies.isNotEmpty() && type != TYPE_LATEST && !isDataOld(movies[0]) -> {
                     // DB not empty & data is not old, show current data
-                    withContext(Dispatchers.Main) {
-                        mainView.displayData(movies)
-                    }
+                    withContext(Dispatchers.Main) { mainView.displayData(movies) }
                 }
                 movies.size == 1 && type == TYPE_LATEST && !isDataOld(movies[0]) -> {
                     // DB not empty & latest option selected & data is not old, show current data
-                    withContext(Dispatchers.Main) {
-                        mainView.displayData(movies)
-                    }
+                    withContext(Dispatchers.Main) { mainView.displayData(movies) }
                 }
                 else -> {
                     // todo handle exception
@@ -64,6 +65,7 @@ class MainPresenter
     }
 
     override fun onRefreshData() {
+        refrshingData = true
         scope.launch(Dispatchers.IO) {
             if (selectedType != TYPE_LATEST) {
                 fetchRemoteData(selectedType)
@@ -85,6 +87,10 @@ class MainPresenter
                 movieRepository.insertLocalMovies(it.results)
             }
             withContext(Dispatchers.Main) {
+                if (refrshingData) {
+                    refrshingData = false
+                    mainView.showToast("Data updated")
+                }
                 response.body()?.let { mainView.displayData(it.results) }
             }
         } else {
@@ -103,6 +109,10 @@ class MainPresenter
                 movieRepository.insertLocalMovies(listOf(it))
             }
             withContext(Dispatchers.Main) {
+                if (refrshingData) {
+                    refrshingData = false
+                    mainView.showToast("Data updated")
+                }
                 response.body()?.let {
                     mainView.displayData(listOf(it))
                 }
