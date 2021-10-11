@@ -1,5 +1,6 @@
 package com.kenruizinoue.umbachallenge.view
 
+import android.content.Intent
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -9,6 +10,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.kenruizinoue.umbachallenge.R
 import com.kenruizinoue.umbachallenge.model.Movie
+import com.kenruizinoue.umbachallenge.util.Constants
 
 class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
@@ -24,7 +26,6 @@ class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView), View.O
 
     fun bind(movie: Movie) {
         this.movie = movie
-
         Glide.with(itemView.context)
             .load("https://image.tmdb.org/t/p/w500${movie.backdrop_path}")
             .transition(DrawableTransitionOptions.withCrossFade())
@@ -36,6 +37,9 @@ class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView), View.O
     }
 
     override fun onClick(view: View) {
-
+        val context = itemView.context
+        val launchDetailIntent = Intent(context, DetailActivity::class.java)
+        launchDetailIntent.putExtra(Constants.EXTRA_MOVIE, movie)
+        context.startActivity(launchDetailIntent)
     }
 }

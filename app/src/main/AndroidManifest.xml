@@ -13,8 +13,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UMBAChallenge">
         <activity
+            android:name="com.kenruizinoue.umbachallenge.view.DetailActivity"
+            android:parentActivityName="com.kenruizinoue.umbachallenge.view.MainActivity"
+            android:screenOrientation="fullSensor" />
+        <activity
             android:name=".view.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="fullSensor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
