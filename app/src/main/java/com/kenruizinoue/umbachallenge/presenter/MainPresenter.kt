@@ -27,18 +27,21 @@ class MainPresenter
                         fetchRemoteData(type)
                     }
                     movies.isEmpty() && type == TYPE_LATEST -> {
-                        // DB empty with latest
+                        // DB empty & latest option selected
                         fetchRemoteMovie(type)
                     }
-                    movies.size == 1 && type == TYPE_LATEST -> {
-                        // DB not empty with latest
-                        mainView.displayMovie(movies[0])
-                    }
-                    else -> {
+                    movies.isNotEmpty() && type != TYPE_LATEST  -> {
                         // DB not empty
                         withContext(Dispatchers.Main) {
                             mainView.displayData(movies)
                         }
+                    }
+                    movies.size == 1 && type == TYPE_LATEST -> {
+                        // DB not empty & latest option selected
+                        mainView.displayMovie(movies[0])
+                    }
+                    else -> {
+                        // todo handle exception
                     }
                 }
             }

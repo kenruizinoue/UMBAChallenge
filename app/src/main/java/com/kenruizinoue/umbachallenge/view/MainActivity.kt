@@ -3,11 +3,15 @@ package com.kenruizinoue.umbachallenge.view
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.kenruizinoue.umbachallenge.contract.MainContract
 import com.kenruizinoue.umbachallenge.R
 import com.kenruizinoue.umbachallenge.model.Movie
 import com.kenruizinoue.umbachallenge.presenter.MainPresenter
+import com.kenruizinoue.umbachallenge.util.Constants.TYPE_LATEST
 import com.kenruizinoue.umbachallenge.util.Constants.TYPE_POPULAR
+import com.kenruizinoue.umbachallenge.util.Constants.TYPE_TOP_RATED
+import com.kenruizinoue.umbachallenge.util.Constants.TYPE_UPCOMING
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -15,6 +19,7 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity(), MainContract.View {
 
     private lateinit var recyclerView: RecyclerView
+    private lateinit var bottomNavigationView: BottomNavigationView
     @Inject
     lateinit var presenter: MainPresenter
     @Inject
@@ -24,9 +29,10 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         recyclerView = findViewById(R.id.recyclerView)
-        presenter.onFetchStart(TYPE_POPULAR)
-
+        bottomNavigationView = findViewById(R.id.bottomNavigationView)
         recyclerView.apply { adapter = movieAdapter }
+        setupBottomNavListener()
+        presenter.onFetchStart(TYPE_POPULAR)
     }
 
     override fun displayData(movies: List<Movie>) {
@@ -47,5 +53,28 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
     override fun showSnackbar() {
         TODO("Not yet implemented")
+    }
+
+    private fun setupBottomNavListener() {
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.action_popular -> {
+                    presenter.onFetchStart(TYPE_POPULAR)
+                }
+                R.id.action_upcoming -> {
+                    presenter.onFetchStart(TYPE_UPCOMING)
+                }
+                R.id.action_top_rated -> {
+                    presenter.onFetchStart(TYPE_TOP_RATED)
+                }
+                R.id.action_latest -> {
+                    presenter.onFetchStart(TYPE_LATEST)
+                }
+                else -> {
+                    // todo handle exception
+                }
+            }
+            true
+        }
     }
 }
