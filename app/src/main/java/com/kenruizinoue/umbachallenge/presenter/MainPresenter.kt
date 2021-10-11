@@ -1,6 +1,6 @@
 package com.kenruizinoue.umbachallenge.presenter
 
-import com.kenruizinoue.umbachallenge.MainContract
+import com.kenruizinoue.umbachallenge.contract.MainContract
 import com.kenruizinoue.umbachallenge.model.MovieRepository
 import com.kenruizinoue.umbachallenge.util.Constants.TYPE_LATEST
 import kotlinx.coroutines.CoroutineScope
@@ -9,8 +9,14 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
+import javax.inject.Inject
 
-class MainPresenter(val scope: CoroutineScope, val mainView: MainContract.View, private val movieRepository: MovieRepository): MainContract.Presenter {
+class MainPresenter
+@Inject constructor(
+    private val scope: CoroutineScope,
+    private val mainView: MainContract.View,
+    private val movieRepository: MovieRepository
+) : MainContract.Presenter {
 
     override fun onFetchStart(type: String) {
         scope.launch(Dispatchers.IO) {
