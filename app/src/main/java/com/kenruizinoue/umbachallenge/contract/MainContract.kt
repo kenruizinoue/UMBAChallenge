@@ -1,7 +1,6 @@
-package com.kenruizinoue.umbachallenge
+package com.kenruizinoue.umbachallenge.contract
 
 import com.kenruizinoue.umbachallenge.model.Movie
-import com.kenruizinoue.umbachallenge.model.network.Movies
 
 class MainContract {
     interface View {
